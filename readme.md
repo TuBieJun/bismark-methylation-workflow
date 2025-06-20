@@ -2,8 +2,8 @@
 A basic simple workflow for bisulfite sequencing data methylation analysis using bismark.
 ## Image build
 ```
-git clone
-cd 
+git clone https://github.com/TuBieJun/bismark-methylation-workflow.git
+cd bismark-methylation-workflow
 docker build -t bismark-methylation-workflow:latest .
 ```
 ## Prepare input json file
