@@ -23,16 +23,19 @@ RUN apt-get update && apt-get install -y \
     libncurses5-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# 安装 Bowtie
 WORKDIR /opt
-RUN wget https://sourceforge.net/projects/bowtie-bio/files/bowtie/1.3.1/bowtie-1.3.1-linux-x86_64.zip && \
-    unzip bowtie-1.3.1-linux-x86_64.zip && \
-    rm bowtie-1.3.1-linux-x86_64.zip && \
-    ln -s /opt/bowtie-1.3.1-linux-x86_64/bowtie /usr/local/bin/ && \
-    ln -s /opt/bowtie-1.3.1-linux-x86_64/bowtie-build /usr/local/bin/ && \
-    ln -s /opt/bowtie-1.3.1-linux-x86_64/bowtie-inspect /usr/local/bin/
+# 安装 Bowtie2
+RUN wget https://sourceforge.net/projects/bowtie-bio/files/bowtie2/2.5.4/bowtie2-2.5.4-linux-x86_64.zip && \
+    unzip bowtie2-2.5.4-linux-x86_64.zip && \
+    rm bowtie2-2.5.4-linux-x86_64.zip
 
-# 安装 Samtools
+# 安装 Bismark
+RUN wget https://github.com/FelixKrueger/Bismark/archive/refs/tags/v0.24.2.tar.gz && \
+    tar -xzf v0.24.2.tar.gz && \
+    rm v0.24.2.tar.gz && \
+    mv Bismark-0.24.2 Bismark
+
+# install samtools
 RUN wget https://github.com/samtools/samtools/releases/download/1.15/samtools-1.15.tar.bz2 && \
     tar -xjf samtools-1.15.tar.bz2 && \
     rm samtools-1.15.tar.bz2 && \
@@ -41,18 +44,14 @@ RUN wget https://github.com/samtools/samtools/releases/download/1.15/samtools-1.
     make && \
     make install
 
-# 安装 Bismark
-RUN wget https://github.com/FelixKrueger/Bismark/archive/refs/tags/0.24.0.tar.gz && \
-    tar -xzf 0.24.0.tar.gz && \
-    rm 0.24.0.tar.gz && \
-    ln -s /opt/Bismark-0.24.0/bismark /usr/local/bin/ && \
-    ln -s /opt/Bismark-0.24.0/bismark_genome_preparation /usr/local/bin/ && \
-    ln -s /opt/Bismark-0.24.0/bismark_methylation_extractor /usr/local/bin/
+ENV PATH="/opt/Bismark/:$PATH"
+ENV PATH="/opt/bowtie2-2.5.4-linux-x86_64/:$PATH"
 
-# 设置工作目录
-WORKDIR /data
-
-# 验证安装
-RUN bismark --version && \
-    bowtie --version && \
-    samtools --version
+# 安装 Samtools
+#RUN wget https://github.com/samtools/samtools/releases/download/1.15/samtools-1.15.tar.bz2 && \
+#    tar -xjf samtools-1.15.tar.bz2 && \
+#    rm samtools-1.15.tar.bz2 && \
+#    cd samtools-1.15 && \
+#    ./configure && \
+#    make && \
+#    make install
