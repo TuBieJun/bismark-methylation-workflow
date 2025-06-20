@@ -117,12 +117,12 @@ task biskmark2report {
     command <<<
         set -ex
         set -o pipefail
-        bismark2report -o ~{prefix}.bismark_report.html \
+        bismark2report -o ~{prefix}_bismark_report.html \
             --dir ./ \
             --alignment_report ~{alignment_report} \
-            --deduplication_report ~{dedup_report} \
-            --mbias_report ~{mbias_report} \
-            --splitting_report ~{splitting_report}
+            --dedup_report ~{dedup_report} \
+            --splitting_report ~{splitting_report} \
+            --mbias_report ~{mbias_report}
     >>>
     runtime {
         docker: "bismark-methylation-workflow:latest"
